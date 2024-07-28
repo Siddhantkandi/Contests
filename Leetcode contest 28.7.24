@@ -1,33 +1,46 @@
-Find the Count of Numbers Which Are Not Special
+Find the Count of Numbers Which Are Not Special.
+
+Method used is called Sieve of Eratosthenes
 
 
 class Solution {
 public:
     int nonSpecialCount(int l, int r) {
-        int lim = (int) (sqrt(r));
+        // Calculate the square root of r
+        int lim = static_cast<int>(sqrt(r));
 
-        vector<bool> v(lim+1,true);
+        // Create a boolean vector for marking primes up to lim
+        vector<bool> isPrime(lim + 1, true);
 
-        v[0]=v[1]=false;
+        // Mark 0 and 1 as non-prime
+        isPrime[0] = isPrime[1] = false;
 
-        for(int i=2;i<= (int)(sqrt(lim));i++){
-            if(v[i]){
-                for(int j = i*i ; j<=lim;j+=i){
-                    v[j] = false;
+        // Use Sieve of Eratosthenes to find all primes up to lim
+        for (int i = 2; i * i <= lim; ++i) {
+            if (isPrime[i]) {
+                for (int j = i * i; j <= lim; j += i) {
+                    isPrime[j] = false;
                 }
             }
         }
 
-        int count=0;
-        for(int i=2;i<=lim;i++){
-            if(v[i]){
-                int square = i*i;
-                if(square>=l && square<=r){
+        // Count the number of perfect squares of primes within the range [l, r]
+        int count = 0;
+        for (int i = 2; i <= lim; ++i) {
+            if (isPrime[i]) {
+                int square = i * i;
+                if (square >= l && square <= r) {
                     count++;
                 }
             }
         }
-        return ((r-l+1)-count);
+
+        // Total numbers in the range [l, r]
+        int totalNumbers = r - l + 1;
+
+        // Return the count of non-special numbers
+        return totalNumbers - count;
     }
 };
+
 
